@@ -2,30 +2,40 @@
 import { useState } from "react";
 
 export default function AddItems() { 
+  const [errorMessage, setErrorMessage] = useState("");
   const [currentItem, setCurrentItem] = useState("");
+  const [currentQuantity, setCurrentQuantity] = useState(1);
   const [items, setItem] = useState([]);
 
-  const handleChange = (event) => {
-    // itemName = event.target.value;
-    //console.log(itemName)
-    setCurrentItem(event.target.value);
+  const handleChangeItem = (event) => {
+      setCurrentItem(event.target.value);
   }
 
-  const handleClick = (event) => {
-    setItem(oldArray => [...oldArray, currentItem] );
-    setCurrentItem("");
+  const handleChangeQuantity = (event) => {
+    setCurrentQuantity(event.target.value);
+  }
+
+  const handleClick = () => {
+    if (currentItem.length > 0) {
+      const newItem = { item: currentItem, quantity: currentQuantity};
+      setItem(oldArray => [...oldArray, newItem] );
+      setCurrentItem("");
+      setErrorMessage("");
+    } else {
+      setErrorMessage("Please type an item name.");
+    }
   }
 
   return (
     <div className="App">
-      <h1>My Shopping List</h1>
+      <h1>My Shopping ListO</h1>
       <input
-        onChange={handleChange}
+        onChange={handleChangeItem}
         type="text"
         placeholder="What do I need to buy?"
+        value={currentItem}
       />
-      <br />
-      <br />
+      <p style={{ color: "red"}}>{errorMessage}</p>
       <label for="shop">Where I am going to buy it:</label>
             <select id="shop" name="shop">
                 <option value="Woolworth">Woolworth</option>
@@ -36,13 +46,19 @@ export default function AddItems() {
       <br />
       <br />
       <label for="amount">Quantity:</label>
-            <input type="number" id="number"/>
+            <input type="number" id="number" onChange={handleChangeQuantity} value={currentQuantity} min={1}/>
       <br />
       <br />
       <button onClick={handleClick}>+ Add</button>
       <br />
       <br />
-      <ul><li>{items}</li></ul>
+      {items.map((item, index) => (
+          <li key={index}>
+            {item.item} | {item.quantity}
+            {/* <button onClick={() => handleEdit(index)}>Edit</button>
+            <button onClick={() => handleDelete(index)}>Delete</button> */}
+          </li>
+        ))}
        
     </div>
   );
