@@ -2,22 +2,29 @@
 import { useState } from "react";
 
 export default function AddItems() { 
+  const [items, setItem] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [currentItem, setCurrentItem] = useState("");
   const [currentQuantity, setCurrentQuantity] = useState(1);
-  const [items, setItem] = useState([]);
+  const [currentShop, setCurrentShop] = useState("");
+  //const [editing, setEditing] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const handleChangeItem = (event) => {
-      setCurrentItem(event.target.value);
+    setCurrentItem(event.target.value);
   }
 
   const handleChangeQuantity = (event) => {
     setCurrentQuantity(event.target.value);
   }
 
+  const handleChangeShop = (event) => {
+    setCurrentShop(event.target.value);
+  }
+
   const handleClick = () => {
     if (currentItem.length > 0) {
-      const newItem = { item: currentItem, quantity: currentQuantity};
+      const newItem = { item: currentItem, quantity: currentQuantity, shop: currentShop};
       setItem(oldArray => [...oldArray, newItem] );
       setCurrentItem("");
       setErrorMessage("");
@@ -26,9 +33,19 @@ export default function AddItems() {
     }
   }
 
+  //const handleEditing = () => {
+   // setEditing(true)
+   // handleChangeItem()
+    
+  //}
+
+  const handleClickDone = () => {
+    setIsDone(!isDone);
+  }
+
   return (
     <div className="App">
-      <h1>My Shopping ListO</h1>
+      <h1>my shopping ListO</h1>
       <input
         onChange={handleChangeItem}
         type="text"
@@ -37,7 +54,8 @@ export default function AddItems() {
       />
       <p style={{ color: "red"}}>{errorMessage}</p>
       <label for="shop">Where I am going to buy it:</label>
-            <select id="shop" name="shop">
+            <select onChange={handleChangeShop} id="shop" name="shop">
+                <option value="Choose">Choose a shop</option>
                 <option value="Woolworth">Woolworth</option>
                 <option value="Coles">Coles</option>
                 <option value="Aldi">Aldi</option>
@@ -53,11 +71,10 @@ export default function AddItems() {
       <br />
       <br />
       {items.map((item, index) => (
-          <li key={index}>
-            {item.item} | {item.quantity}
-            {/* <button onClick={() => handleEdit(index)}>Edit</button>
-            <button onClick={() => handleDelete(index)}>Delete</button> */}
-          </li>
+          <li key={index} onClick={handleClickDone} style={{ textDecoration: isDone && "line-through" }}>
+            {item.item} | {item.quantity} | {item.shop}
+            {/*<button onClick={() => handleEditing()}>Edit</button>*/}
+          </li>    
         ))}
        
     </div>
