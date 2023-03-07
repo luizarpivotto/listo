@@ -7,8 +7,8 @@ export default function AddItems() {
   const [currentItem, setCurrentItem] = useState("");
   const [currentQuantity, setCurrentQuantity] = useState(1);
   const [currentShop, setCurrentShop] = useState("");
-  //const [editing, setEditing] = useState(false);
-  const [isDone, setIsDone] = useState(false);
+  //const [editing, setEditing] = useState(null);
+  //const [isDone, setIsDone] = useState(false);
 
   const handleChangeItem = (event) => {
     setCurrentItem(event.target.value);
@@ -22,10 +22,14 @@ export default function AddItems() {
     setCurrentShop(event.target.value);
   }
 
+  //this function will run when +Add button is clicked
+  //if there isn't an input, an error message in red will show up
+  //if you type something and chose the quantity and shop, these info will be displayed
+  //once you add the item, the input space will go back to "What do I need to buy?"
   const handleClick = () => {
     if (currentItem.length > 0) {
       const newItem = { item: currentItem, quantity: currentQuantity, shop: currentShop};
-      setItem(oldArray => [...oldArray, newItem] );
+      setItem(oldArray => [...oldArray, newItem] ); 
       setCurrentItem("");
       setErrorMessage("");
     } else {
@@ -33,15 +37,20 @@ export default function AddItems() {
     }
   }
 
-  //const handleEditing = () => {
-   // setEditing(true)
-   // handleChangeItem()
-    
+  //const handleEditing = (index) => {
+  //  setCurrentItem(items[index]);
+  //  setEditing(index);
   //}
 
-  const handleClickDone = () => {
-    setIsDone(!isDone);
-  }
+  //const handleDelete = () => {
+    //setIsDone(!isDone)
+  //}
+
+  const handleDelete = (index) => {
+    const currentItem = [...items];
+    currentItem.splice(index, 1); //.splice() changes the contents of an array by removing/replacing existing elements and/or adding new elements in place
+    setItem(currentItem);
+  };
 
   return (
     <div className="App">
@@ -71,9 +80,11 @@ export default function AddItems() {
       <br />
       <br />
       {items.map((item, index) => (
-          <li key={index} onClick={handleClickDone} style={{ textDecoration: isDone && "line-through" }}>
+          <li key={index} /*onClick={handleClickDone} style={{ textDecoration: isDone && "line-through" }}*/>
             {item.item} | {item.quantity} | {item.shop}
-            {/*<button onClick={() => handleEditing()}>Edit</button>*/}
+            {/*<button onClick={() => handleEditing(index)}>Edit</button>}*/}
+            {<button onClick={() => handleDelete()}>Bought</button>}
+            {/*<button onClick={handleDelete} style={{ textDecoration: isDone && "line-through" }}>Done</button>*/}
           </li>    
         ))}
        
